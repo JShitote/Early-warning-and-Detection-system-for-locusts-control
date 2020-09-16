@@ -1,1 +1,9 @@
+Sketch uses 30514 bytes (99%) of program storage space. Maximum is 30720 bytes.
+Global variables use 1936 bytes (94%) of dynamic memory, leaving 112 bytes for local variables. Maximum is 2048 bytes.
+Low memory available, stability problems may occur.
 
+Sketch uses 30858 bytes (100%) of program storage space. Maximum is 30720 bytes.
+Global variables use 1948 bytes (95%) of dynamic memory, leaving 100 bytes for local variables. Maximum is 2048 bytes.
+Sketch too big; see http://www.arduino.cc/en/Guide/Troubleshooting#size for tips on reducing it.
+
+Error compiling for board Arduino Pro or Pro Mini.
