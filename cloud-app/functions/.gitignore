@@ -1,1 +1,8 @@
 node_modules/
+*.stackdump
+
+# lock files
+package-lock.json
+yarn.lock
+
+.runtimeconfig.json
