@@ -28,7 +28,7 @@ export default {
 
 <style scoped>
 #searchbar {
-  position:absolute;
+  /* position:absolute; */
   border-color: hsl(220, 9%, 87%);
   border: 1px;
  top:29px; 
