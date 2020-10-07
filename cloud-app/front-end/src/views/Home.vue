@@ -3,13 +3,13 @@
 
 
   <div class="map">
-         <Map ></Map>
+         <Map :devices="deviceData"  ></Map>
   </div>
   <div class="search">
 <Search></Search>
   </div>
   <div class="deviceCard">
-   <DeviceCard v-show="isCardVisible" :device-data="devicedata"></DeviceCard>
+   <DeviceCard v-show="isCardVisible" ></DeviceCard>
   </div>
 
 
@@ -20,7 +20,6 @@
 </template>
 
 <script>
-import firebase from '../firebase'
 import {bus} from '../main';
 
 import Search from "@/components/SearchBar.vue";
@@ -39,7 +38,7 @@ export default {
 
     return {
       markerLatLng : [],
-      devicedata : {},
+      deviceData : {},
       isCardVisible: false
     }
 
@@ -47,43 +46,10 @@ export default {
   async created(){
 
    let { data, status} = await axios.get('https://api.waziup.io/api/v2/devices?q=owner==marvin.johnson@orange.com')
-   console.log(data);
+   console.log('data:', data);
 
-   this.devicedata = data;
+   this.deviceData = data;
 
-
-
-
-    var db = firebase.database().ref();
-
-
-    db.once('value')
-      .then(snapshot =>{
-        let { data } = snapshot.val();
-
-        bus.$emit('marker', {
-        location:data.latLng,
-        id:data.id,
-        
-      })
-      })
-
-    db.on('value',(snap)=>{
-
-
-
-      let {livedata} = snap.val();
-
-      bus.$emit('marker', {
-        location:livedata.latLng,
-        id:livedata.id,
-        data: livedata.data,
-        time: livedata.date_modified
-      })
-
-
-
-    })
 
     bus.$on('showCard', snap =>{
         this.isCardVisible = snap.show

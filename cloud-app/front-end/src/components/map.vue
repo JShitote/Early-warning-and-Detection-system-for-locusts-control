@@ -1,5 +1,7 @@
 <template>
-  <div style="width:100vw;height:100vh;position:relative">
+  <div  id="map">
+  <code style="margin-top:300px;">
+  </code>
  
  <l-map
  :zoom='zoom'
@@ -13,7 +15,11 @@
   :url="url"
   :attribution="attribution"
  ></l-tile>
- <l-marker :lat-lng="markerLatLng" @click="innerClick"></l-marker>
+
+ <template v-for="item in deviceLocation">
+ <l-marker :lat-lng="[item.location.latitude,item.location.longitude]" @click="showMarkerCard(item.id)" :key="item.id"></l-marker>
+ 
+ </template>
  <l-control-zoom position="bottomright"></l-control-zoom>
  </l-map>
 
@@ -34,7 +40,13 @@ Icon.Default.mergeOptions({
 });
 
 export default {
+  props:{
 
+    devices:{
+      required:true
+    }
+
+  },
   components:{
     LMap,
     "l-tile": LTileLayer,
@@ -45,23 +57,23 @@ export default {
   data(){
     
        return {
-        zoom: 7,
-      center: latLng(47.41322, -1.219482),
-      url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-      attribution:
-        '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-      withPopup: latLng(47.41322, -1.219482),
-      withTooltip: latLng(47.41422, -1.250482),
-      currentZoom: 5,
-      currentCenter: latLng(48.41322, -1.219482),
-      showParagraph: false,
-      mapOptions: {
-        zoomSnap: 0.5,
-        zoomControl: false
-      },
-      showMap: false,
-      markerLatLng:[48.1456,-1.24553],
-      deviceid: null
+          zoom: 7,
+          center: latLng(47.41322, -1.219482),
+          url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+          attribution:
+            '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+          withPopup: latLng(47.41322, -1.219482),
+          withTooltip: latLng(47.41422, -1.250482),
+          currentZoom: 5,
+          currentCenter: latLng(48.41322, -1.219482),
+          showParagraph: false,
+          mapOptions: {
+            zoomSnap: 0.5,
+            zoomControl: false
+          },
+          showMap: false,
+          markerLatLng:[48.1456,-1.24553],
+          deviceid: null
   } 
   },
   methods:{
@@ -71,16 +83,37 @@ export default {
     centerUpdate(center) {
       this.currentCenter = center;
     },
-    innerClick() {
+    showMarkerCard(id) {
+
       bus.$emit('showCard',{
         id: this.deviceid,
         show: true
       })
      
-    }
+    },
 
   },
   computed:{
+
+
+    deviceLocation(){
+
+
+
+      return Object.values(this.devices).map((element,i)=>{
+
+        let { id ,gateway_id,location, name } = element;
+       
+          return {
+           id,
+           gateway_id,
+           location,
+           name
+          }
+
+      })
+
+    }
 
    
   },
@@ -88,13 +121,12 @@ export default {
     // this.centerUpdate(this.markerLatLng);
     this.showMap = true
 
-    bus.$on('marker', data =>{
-      this.markerLatLng = data.location;
-      this.devideid = data.id;
-    })
+    // bus.$on('marker', data =>{
+    //   this.markerLatLng = data.location;
+    //   this.devideid = data.id;
+    // })
 
-    
-    
+
   }
   
 
@@ -104,7 +136,11 @@ export default {
 </script>
 
 <style>
-
+#map {
+  width:100vw;
+  height:100vh;
+  position:relative;
+}
 
 
 </style>
