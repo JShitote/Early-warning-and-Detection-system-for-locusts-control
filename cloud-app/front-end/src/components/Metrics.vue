@@ -1,78 +1,25 @@
 <template>
 <div id="card-data">
 <b-container>
-  <b-row>
-    <b-col class="card-data">
+  
+
+  
+<template v-for="(group,i) in chunkedData" >
+
+  <b-row :key='i' >
+    <b-col  class="card-data" v-for="(item,i) in group" :key="i">
         <div>
             <b-icon icon="search"> </b-icon>
         </div>
         <div class='card-text'>
-        temperature   
+        {{item.name | replaceWord }}   
         </div>
         <div class="card-text-data">
-          45
+          {{item.value}}
         </div>
     </b-col>
-    <b-col class="card-data">
-        <div>
-            <b-icon icon="search"> </b-icon>
-        </div>
-        <div class='card-text'>
-        temperature   
-        </div>
-        <div class="card-text-data">
-          45
-        </div>
-    </b-col>
-    <b-col class="card-data">
-        <div>
-            <b-icon icon="search"> </b-icon>
-        </div>
-        <div class='card-text'>
-        temperature   
-        </div>
-        <div class="card-text-data">
-          45
-        </div>
-    </b-col>
-    
-  </b-row>
-  <b-row>
-    <b-col class="card-data">
-        <div>
-            <b-icon icon="search"> </b-icon>
-        </div>
-        <div class='card-text'>
-        temperature   
-        </div>
-        <div class="card-text-data">
-          45
-        </div>
-    </b-col>
-    <b-col class="card-data">
-        <div>
-            <b-icon icon="search"> </b-icon>
-        </div>
-        <div class='card-text'>
-        temperature   
-        </div>
-        <div class="card-text-data">
-          45
-        </div>
-    </b-col>
-    <b-col class="card-data">
-        <div>
-            <b-icon icon="search"> </b-icon>
-        </div>
-        <div class='card-text'>
-        temperature   
-        </div>
-        <div class="card-text-data">
-          45
-        </div>
-    </b-col>
-    
-  </b-row>
+    </b-row>
+  </template>
   
 </b-container>
 
@@ -80,7 +27,69 @@
 </template>
 
 <script>
+import {bus} from '../main';
+import {chunk} from 'lodash';
+
 export default {
+  props:{
+    devicedata:{
+      
+    }
+  },
+  data(){
+      return{
+        data:[{
+          name: "DIR",
+          value: 182  
+        },
+        {
+          name: "HUM",
+          value: 12  
+        },
+        {
+          name: "SPD",
+          value: 30  
+        },
+        {
+          name: "TC",
+          value: 30  
+        }],
+        itemPerRow:3
+      } 
+      
+      },
+      computed:{
+          chunkedData: function(){
+              return chunk(this.data,2)
+          }
+      },
+      filters:{
+        replaceWord: function(value){
+            if(!value) return ''
+            switch(value){
+                case 'HUM':
+                    return 'Humidity'
+                case 'SPD':
+                    return 'Wind Speed'
+                case 'TC' :
+                    return 'Temperature'
+                case 'DIR':
+                    return 'Wind Direction'
+            }
+
+        }
+      },    
+      mounted(){
+
+     bus.$on('marker', snap =>{
+
+       
+      this.data = snap.data
+
+      
+    })
+
+  }
 
 
 }

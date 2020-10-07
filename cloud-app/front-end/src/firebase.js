@@ -1,4 +1,5 @@
 import firebase from 'firebase';
+import 'firebase/database'
 
 
 var config = {
@@ -12,5 +13,6 @@ var config = {
     measurementId: "G-24R5YNW1KY"
   };
 
-var app = firebase.initializeApp(config);
+var fire = firebase.initializeApp(config);
+
 export default fire;
