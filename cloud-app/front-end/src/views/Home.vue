@@ -9,7 +9,7 @@
 <Search></Search>
   </div>
   <div class="deviceCard">
-   <DeviceCard v-show="isCardVisible" ></DeviceCard>
+   <DeviceCard v-show="isCardVisible" :device_id="device_id"></DeviceCard>
   </div>
 
 
@@ -39,20 +39,22 @@ export default {
     return {
       markerLatLng : [],
       deviceData : {},
-      isCardVisible: false
+      isCardVisible: false,
+      device_id:""
     }
 
   },
   async created(){
 
    let { data, status} = await axios.get('https://api.waziup.io/api/v2/devices?q=owner==marvin.johnson@orange.com')
-   console.log('data:', data);
 
    this.deviceData = data;
 
 
     bus.$on('showCard', snap =>{
-        this.isCardVisible = snap.show
+
+        this.device_id = snap.id;
+        this.isCardVisible = snap.show;
     })
   }
 };

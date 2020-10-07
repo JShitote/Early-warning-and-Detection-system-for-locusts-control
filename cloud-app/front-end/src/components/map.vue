@@ -4,6 +4,7 @@
   </code>
  
  <l-map
+ ref="map"
  :zoom='zoom'
  v-if="showMap"
  :center="center"
@@ -72,8 +73,6 @@ export default {
             zoomControl: false
           },
           showMap: false,
-          markerLatLng:[48.1456,-1.24553],
-          deviceid: null
   } 
   },
   methods:{
@@ -86,7 +85,7 @@ export default {
     showMarkerCard(id) {
 
       bus.$emit('showCard',{
-        id: this.deviceid,
+        id,
         show: true
       })
      
@@ -97,8 +96,6 @@ export default {
 
 
     deviceLocation(){
-
-
 
       return Object.values(this.devices).map((element,i)=>{
 
@@ -118,14 +115,7 @@ export default {
    
   },
   mounted(){
-    // this.centerUpdate(this.markerLatLng);
-    this.showMap = true
-
-    // bus.$on('marker', data =>{
-    //   this.markerLatLng = data.location;
-    //   this.devideid = data.id;
-    // })
-
+     this.showMap = true
 
   }
   

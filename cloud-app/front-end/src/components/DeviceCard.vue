@@ -39,6 +39,10 @@ components:{
 props:{
   devicedata:{
     type:Object
+  },
+  device_id:{
+    required:true
+
   }
 },
 data(){
