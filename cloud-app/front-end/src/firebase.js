@@ -1,7 +1,6 @@
 import firebase from 'firebase';
 import 'firebase/database'
 
-
 var config = {
     apiKey: "AIzaSyBrz1mgreuGwS8n_SGOnJmIyeGrtgVEvUQ",
     authDomain: "locust-project.firebaseapp.com",
@@ -12,6 +11,7 @@ var config = {
     appId: "1:966372321003:web:cdba71a8f1598067c280ae",
     measurementId: "G-24R5YNW1KY"
   };
+
 
 var fire = firebase.initializeApp(config);
 

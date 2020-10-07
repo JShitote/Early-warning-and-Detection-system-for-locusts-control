@@ -15,7 +15,7 @@
     <b-tabs content-class="mt-3">
     <b-tab title="metrics" active>
     
-    <Metrics  :data ="devicedata" ></Metrics>
+    <Metrics :graphData="[]"  :deviceData ="deviceData" ></Metrics>
     
     </b-tab>
     <b-tab title="trend"><p>I'm the second tab</p></b-tab>
@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import {bus} from '../main';
 import Metrics from "@/components/Metrics.vue";
 import firebase from '../firebase'
@@ -42,7 +43,6 @@ props:{
   },
   device_id:{
     required:true
-
   }
 },
 data(){
@@ -71,19 +71,31 @@ methods:{
          bus.$emit('showCard', { show:false  })
              }
 },
-mounted(){
+async mounted(){
+
+ let { data , status} = await axios.get('https://api.waziup.io/api/v2/devices/Orange1');
+
+ console.log(typeof data.sensors, 'status', status)
+
+let sensorData =  Object.values(data.sensors).map(item=>{
+
+   let { name , value:{timestamp, value }, id} = item
+   return {
+    name,
+    id,
+    timestamp,
+    value
+   }
+
+ })
 
 
-   var db = firebase.database().ref();
+this.deviceData = sensorData;
 
-    db.on('value',(snap)=>{
+ console.log(this.deviceData)
 
-      let {livedata} = snap.val();
 
-      this.deviceData = livedata.data
-
-    })
-
+  
    
 }
   

@@ -1,9 +1,7 @@
 <template>
 <div id="card-data">
 <b-container>
-  
-
-  
+ 
 <template v-for="(group,i) in chunkedData" >
 
   <b-row :key='i' >
@@ -27,40 +25,17 @@
 </template>
 
 <script>
-import {bus} from '../main';
 import {chunk} from 'lodash';
 
 export default {
-  props:{
-    devicedata:{
-      
-    }
-  },
-  data(){
-      return{
-        data:[{
-          name: "DIR",
-          value: 182  
-        },
-        {
-          name: "HUM",
-          value: 12  
-        },
-        {
-          name: "SPD",
-          value: 30  
-        },
-        {
-          name: "TC",
-          value: 30  
-        }],
-        itemPerRow:3
-      } 
-      
-      },
+      props:{
+        deviceData:{
+          required:true
+        }
+      },    
       computed:{
           chunkedData: function(){
-              return chunk(this.data,2)
+              return chunk(this.deviceData,2)
           }
       },
       filters:{
@@ -78,18 +53,7 @@ export default {
             }
 
         }
-      },    
-      mounted(){
-
-     bus.$on('marker', snap =>{
-
-       
-      this.data = snap.data
-
-      
-    })
-
-  }
+      }
 
 
 }
