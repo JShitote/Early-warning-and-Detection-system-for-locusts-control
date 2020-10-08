@@ -98,8 +98,6 @@ export default {
   },
   mounted() {
     this.showMap = true
-
-    console.log(this.devices)
   }
 }
 </script>

@@ -83,14 +83,10 @@ export default {
   watch: {
     async device_id(newVal, oldVal) {
       this.deviceData = await this.fetchDeviceData(newVal)
-      console.log(this.devicedata)
     }
   },
   async mounted() {
-    this.deviceData = await this.fetchDeviceData()
-    bus.$on('showCard', snap => {
-      console.log(snap)
-    })
+    this.deviceData = await this.fetchDeviceData();
   }
 }
 </script>
