@@ -1,6 +1,6 @@
 <template>
   <div id="devicecard">
-    <b-card>
+      <b-card>
       <b-row>
         <b-col>
           <b-card-text>Langata hospital</b-card-text>
@@ -9,7 +9,7 @@
           <b-icon icon="x-circle" @click="closeCard"> </b-icon>
         </b-col>
       </b-row>
-      <b-tabs content-class="mt-3">
+      <b-tabs content-class="mt-3" lazy>
         <b-tab title="metrics" active>
           <Metrics :graphData="[]" :deviceData="deviceData"></Metrics>
         </b-tab>
@@ -30,9 +30,6 @@ export default {
     Metrics
   },
   props: {
-    devicedata: {
-      type: Object
-    },
     device_id: {
       required: true
     }
@@ -55,38 +52,45 @@ export default {
         name: 'SPD',
         value: null
       },
-      deviceData: null
+      deviceData: null,
+      dev_id: null
     }
   },
   methods: {
     closeCard: function() {
       bus.$emit('showCard', { show: false })
+    },
+    async fetchDeviceData(device_id = 'Orange1') {
+      let { data, status } = await axios.get(
+        `https://api.waziup.io/api/v2/devices/${device_id}`
+      )
+
+      return Object.values(data.sensors).map(item => {
+        let {
+          name,
+          value: { timestamp, value },
+          id
+        } = item
+        return {
+          name,
+          id,
+          timestamp,
+          value
+        }
+      })
+    }
+  },
+  watch: {
+    async device_id(newVal, oldVal) {
+      this.deviceData = await this.fetchDeviceData(newVal)
+      console.log(this.devicedata)
     }
   },
   async mounted() {
-    let { data, status } = await axios.get(
-      'https://api.waziup.io/api/v2/devices/Orange1'
-    )
-
-    console.log(typeof data.sensors, 'status', status)
-
-    let sensorData = Object.values(data.sensors).map(item => {
-      let {
-        name,
-        value: { timestamp, value },
-        id
-      } = item
-      return {
-        name,
-        id,
-        timestamp,
-        value
-      }
+    this.deviceData = await this.fetchDeviceData()
+    bus.$on('showCard', snap => {
+      console.log(snap)
     })
-
-    this.deviceData = sensorData
-
-    console.log(this.deviceData)
   }
 }
 </script>

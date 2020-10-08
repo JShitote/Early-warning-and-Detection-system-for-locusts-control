@@ -1,6 +1,11 @@
 <template>
   <div id="card-data">
-    <b-container>
+
+    <template v-if="!Array.isArray(deviceData) || !deviceData.length">
+
+    <p>Oooops!! Seem there is no data at this place</p>
+    </template>
+    <b-container v-else>
       <template v-for="(group, i) in chunkedData">
         <b-row :key="i">
           <b-col class="card-data" v-for="(item, i) in group" :key="i">
@@ -40,6 +45,12 @@ export default {
       switch (value) {
         case 'HUM':
           return 'Humidity'
+        case 'sHm':
+          return 'Soil Humidity'
+        case 'PH':
+          return 'Soil pH'
+        case 'RD':
+          return 'Rain Drop'
         case 'SPD':
           return 'Wind Speed'
         case 'TC':

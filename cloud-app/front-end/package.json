@@ -13,7 +13,7 @@
     "bootstrap-vue": "^2.17.3",
     "chart.js": "^2.9.3",
     "core-js": "^3.6.5",
-    "firebase": "^7.21.1",
+    "firebase": "^7.22.1",
     "leaflet": "^1.7.1",
     "lodash": "^4.17.20",
     "register-service-worker": "^1.7.1",

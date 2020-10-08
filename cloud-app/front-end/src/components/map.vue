@@ -51,7 +51,7 @@ export default {
   },
   data() {
     return {
-      zoom: 7,
+      zoom: 4,
       center: latLng(47.41322, -1.219482),
       url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       attribution:
@@ -98,6 +98,8 @@ export default {
   },
   mounted() {
     this.showMap = true
+
+    console.log(this.devices)
   }
 }
 </script>
