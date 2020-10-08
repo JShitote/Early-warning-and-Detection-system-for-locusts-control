@@ -1,6 +1,6 @@
 <template>
   <div id="devicecard">
-      <b-card>
+    <b-card>
       <b-row>
         <b-col>
           <b-card-text>Langata hospital</b-card-text>
@@ -23,7 +23,6 @@
 import axios from 'axios'
 import { bus } from '../main'
 import Metrics from '@/components/Metrics.vue'
-import firebase from '../firebase'
 
 export default {
   components: {
@@ -61,7 +60,7 @@ export default {
       bus.$emit('showCard', { show: false })
     },
     async fetchDeviceData(device_id = 'Orange1') {
-      let { data, status } = await axios.get(
+      let { data } = await axios.get(
         `https://api.waziup.io/api/v2/devices/${device_id}`
       )
 
@@ -81,12 +80,12 @@ export default {
     }
   },
   watch: {
-    async device_id(newVal, oldVal) {
+    async device_id(newVal) {
       this.deviceData = await this.fetchDeviceData(newVal)
     }
   },
   async mounted() {
-    this.deviceData = await this.fetchDeviceData();
+    this.deviceData = await this.fetchDeviceData()
   }
 }
 </script>

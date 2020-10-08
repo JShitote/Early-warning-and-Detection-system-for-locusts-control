@@ -1,9 +1,7 @@
 <template>
   <div id="card-data">
-
     <template v-if="!Array.isArray(deviceData) || !deviceData.length">
-
-    <p>Oooops!! Seem there is no data at this place</p>
+      <p>Oooops!! Seem there is no data at this place</p>
     </template>
     <b-container v-else>
       <template v-for="(group, i) in chunkedData">
