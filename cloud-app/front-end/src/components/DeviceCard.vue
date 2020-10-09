@@ -13,20 +13,24 @@
         <b-tab title="metrics" active>
           <Metrics :graphData="[]" :deviceData="deviceData"></Metrics>
         </b-tab>
-        <b-tab title="trend"><p>I'm the second tab</p></b-tab>
+        <b-tab title="trend">
+          <HighCharts :chart="[]"></HighCharts>
+        </b-tab>
       </b-tabs>
     </b-card>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
+import axios from 'axios' 
 import { bus } from '../main'
 import Metrics from '@/components/Metrics.vue'
+import HighCharts from '@/components/HighCharts.vue'
 
 export default {
   components: {
-    Metrics
+    Metrics,
+    HighCharts
   },
   props: {
     device_id: {

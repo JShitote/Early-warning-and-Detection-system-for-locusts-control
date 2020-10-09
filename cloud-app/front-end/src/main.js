@@ -3,15 +3,20 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import './registerServiceWorker'
+import Highcharts from 'highcharts'
+import Stock from 'highcharts/modules/stock'
+import HighchartsVue from 'highcharts-vue'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
 import { LMap, LTileLayer, LMarker } from 'vue2-leaflet'
 import 'leaflet/dist/leaflet.css'
-// import url('https://fonts.googleapis.com/css?family=Roboto')
 
 Vue.component('l-map', LMap)
 Vue.component('l-tile-layer', LTileLayer)
 Vue.component('l-marker', LMarker)
+
+Stock(Highcharts)
+Vue.use(HighchartsVue)
 
 export const bus = new Vue()
 

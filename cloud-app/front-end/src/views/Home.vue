@@ -41,6 +41,8 @@ export default {
     )
 
     this.deviceData = data
+        console.log(this) 
+
 
     bus.$on('showCard', snap => {
       this.device_id = snap.id
