@@ -99,7 +99,7 @@ export default {
   width: 501px;
   height: 509px;
   /* border: 1px solid red */
-  margin-left: 20px;
+  margin-left: auto;
 }
 .card-text {
   font-size: 21.034px;

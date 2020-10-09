@@ -29,7 +29,7 @@ export default {
     }
   },
   mounted() {
-    this.fetchData();
+    this.fetchData()
   },
   methods: {
     fetchData() {
@@ -49,13 +49,15 @@ export default {
           })
         })
     },
-    sync(vm, event, type) {
-      vm.$refs.highcharts.forEach(function({ chart }){
-       
-        if (chart === this.series.chart) return
+    sync: function(vm, event, type) {
+      this.$refs.highcharts.forEach(function({ chart }) {
+        // console.log('Chart 555', vm)
+
+        if (chart === vm.series.chart) return
         chart.series.forEach(series => {
+          console.log(series)
           series.data.forEach(point => {
-            if (point.x === this.x) {
+            if (point.x === vm.x) {
               if (type === 'over') {
                 point.setState('hover')
                 chart.tooltip.refresh(point)
@@ -122,13 +124,16 @@ export default {
           series: {
             point: {
               events: {
-                mouseOver: (event) =>{
+                mouseOver: event => {
                   // this.sync.call(this, vm, event, 'over')
-                  
-                  this.sync(this, event, 'over')
+                  console.info('mouse over')
+                  vm.sync(this, vm, event, 'over')
                 },
-                mouseOut: (event)=> {
-                  this.sync(this, event, 'out')
+                mouseOut: function(event) {
+                  console.info('mouse out')
+
+                  
+                  vm.sync(this, vm, event, 'out')
                 }
               }
             }
