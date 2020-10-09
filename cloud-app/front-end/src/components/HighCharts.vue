@@ -50,14 +50,12 @@ export default {
         })
     },
     sync: function(vm, event, type) {
-      this.$refs.highcharts.forEach(function({ chart }) {
-        // console.log('Chart 555', vm)
+      vm.$refs.highcharts.forEach(({ chart })=> {
 
-        if (chart === vm.series.chart) return
+        if (chart === this.series.chart) return
         chart.series.forEach(series => {
-          console.log(series)
           series.data.forEach(point => {
-            if (point.x === vm.x) {
+            if (point.x === this.x) {
               if (type === 'over') {
                 point.setState('hover')
                 chart.tooltip.refresh(point)
@@ -124,16 +122,14 @@ export default {
           series: {
             point: {
               events: {
-                mouseOver: event => {
+                mouseOver: function(event) {
                   // this.sync.call(this, vm, event, 'over')
-                  console.info('mouse over')
-                  vm.sync(this, vm, event, 'over')
+                  vm.sync( vm, event, 'over', this)
                 },
                 mouseOut: function(event) {
-                  console.info('mouse out')
+                  // console.info('mouse out')
 
-                  
-                  vm.sync(this, vm, event, 'out')
+                  vm.sync( vm, event, 'out',this)
                 }
               }
             }
