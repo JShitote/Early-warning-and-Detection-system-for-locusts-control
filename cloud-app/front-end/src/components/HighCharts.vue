@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div v-if="!optionsList.length">loading...</div>
+    <div v-if="!optionsList.length || loading">loading...</div>
+    <template v-else-if="containsMissingData">
+      <p>Oooops!! Seem there is no data at this place</p>
+    </template>
     <highcharts
       v-else
       v-for="(options, index) in optionsList"
@@ -14,48 +17,123 @@
 
 <script>
 import Highcharts from 'highcharts'
+import axios from 'axios'
 
 export default {
+  props: {
+    sensorData: {
+      required: true
+    },
+    device_id: {
+      required: true
+    }
+  },
+  watch: {
+    async device_id(newVal) {
+      console.log('new value',newVal)
+      this.fetchSensorData(newVal)
+    }
+  },
   data() {
     return {
-      chartOptions: {
-        series: [
-          {
-            data: [1, 2, 3] // sample data
-          }
-        ]
-      },
+      loading: true,
+      containsMissingData: false,
       optionsList: []
     }
   },
-  mounted() {
-    this.fetchData()
+  async mounted() {
+    await this.fetchSensorData(this.device_id)
+  },
+  computed: {
+    uniqueSensorData() {
+      return [...new Set(this.sensorData)]
+    }
   },
   methods: {
-    fetchData() {
-      fetch(
-        'https://cdn.jsdelivr.net/gh/highcharts/highcharts@v6.0.4/samples/data/activity.json'
-      )
-        .then(res => res.json())
-        .then(activity => {
-          this.optionsList = activity.datasets.map((dataset, i) => {
-            dataset.data = dataset.data.map((val, j) => [
-              activity.xData[j],
-              val
-            ])
+    async fetchSensorData(device_id) {
+      let promises = []
+
+      this.uniqueSensorData.forEach(sensor_id => {
+        promises.push(
+          axios.get(
+            `https://api.waziup.io/api/v2/devices/${device_id}/sensors/${sensor_id}/values`
+          )
+        )
+      })
+
+      let dataset = {}
+
+      axios.all(promises).then(
+        axios.spread((...responses) => {
+          this.optionsList = responses.map(({ data }, i) => {
+            if (!Array.isArray(data) || !data.length) return
+
+            let unit = ''
+            let name = ''
+
+            dataset.data = data.map(({ date_received, value }) => {
+              return [date_received, value]
+            })
+            switch (data[i].sensor_id) {
+              case 'HUM':
+                unit = '%'
+                name = 'Humidity'
+                break
+              case 'sHm':
+                unit = '%'
+                name = 'Soil Humidity'
+                break
+              case 'PH':
+                unit = ''
+                name = 'Soil pH'
+                break
+              case 'RD':
+                unit = 'Drops'
+                name = 'Rain drops'
+                break
+              case 'SPD':
+                unit = 'm/s'
+                name = 'Wind Speed'
+                break
+              case 'TC':
+                unit = '&deg; C'
+                name = 'Temperature'
+                break
+              case 'DIR':
+                unit = ''
+                name = 'Wind Direction '
+                break
+              default:
+                ;(unit = ''), (name = data[i].sensor_id)
+            }
+
+            dataset.name = name
+            dataset.unit = unit
+            dataset.type = 'line'
             dataset.color = Highcharts.getOptions().colors[i]
-            // return this.genOptions(vm, dataset)
+            console.log('**************', dataset)
             return this.genOptions(this, dataset)
           })
         })
-    },
-    sync: function(vm, event, type) {
-      vm.$refs.highcharts.forEach(({ chart })=> {
+      )
 
-        if (chart === this.series.chart) return
+      console.log(this.optionsList.length)
+      if (this.optionsList.length === 0) {
+        console.log('this is true')
+        this.containsMissingData = true
+      }else{
+      console.log(this.optionsList)
+        console.log('this is false')
+        this.containsMissingData = false
+      }
+      this.loading = false
+    },
+    sync(vm, event, type) {
+      vm.$refs.highcharts.forEach(({ chart }) => {
+        if (chart === event.target.series.chart) return
         chart.series.forEach(series => {
           series.data.forEach(point => {
-            if (point.x === this.x) {
+            if (point.x === event.target.x) {
               if (type === 'over') {
                 point.setState('hover')
                 chart.tooltip.refresh(point)
@@ -70,7 +148,7 @@ export default {
         })
       })
     },
-    genOptions(vm, dataset) {
+    genOptions(charts, dataset) {
       return {
         chart: {
           marginLeft: 40, // Keep all charts left aligned
@@ -91,9 +169,7 @@ export default {
         },
         xAxis: {
           crosshair: true,
-          labels: {
-            format: '{value} km'
-          }
+          type: 'datetime'
         },
         yAxis: {
           title: {
@@ -122,14 +198,11 @@ export default {
           series: {
             point: {
               events: {
-                mouseOver: function(event) {
-                  // this.sync.call(this, vm, event, 'over')
-                  vm.sync( vm, event, 'over', this)
+                mouseOver: e => {
+                  this.sync(charts, e, 'over')
                 },
-                mouseOut: function(event) {
-                  // console.info('mouse out')
-
-                  vm.sync( vm, event, 'out',this)
+                mouseOut: e => {
+                  this.sync(charts, e, 'out')
                 }
               }
             }

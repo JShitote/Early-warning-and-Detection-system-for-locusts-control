@@ -14,7 +14,7 @@
           <Metrics :graphData="[]" :deviceData="deviceData"></Metrics>
         </b-tab>
         <b-tab title="trend">
-          <HighCharts :chart="[]"></HighCharts>
+          <HighCharts :sensorData="sensorData" :device_id="device_id"></HighCharts>
         </b-tab>
       </b-tabs>
     </b-card>
@@ -28,6 +28,7 @@ import Metrics from '@/components/Metrics.vue'
 import HighCharts from '@/components/HighCharts.vue'
 
 export default {
+ 
   components: {
     Metrics,
     HighCharts
@@ -56,7 +57,8 @@ export default {
         value: null
       },
       deviceData: null,
-      dev_id: null
+      dev_id: null,
+      sensorData: []
     }
   },
   methods: {
@@ -69,11 +71,13 @@ export default {
       )
 
       return Object.values(data.sensors).map(item => {
+
         let {
           name,
           value: { timestamp, value },
           id
         } = item
+        this.sensorData.push(id)
         return {
           name,
           id,
