@@ -98,7 +98,7 @@ export default {
                 name = 'Wind Speed'
                 break
               case 'TC':
-                unit = '&deg; C'
+                unit = ' \xB0C'
                 name = 'Temperature'
                 break
               case 'DIR':
