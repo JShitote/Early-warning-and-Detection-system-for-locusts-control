@@ -3,7 +3,7 @@
     <code style="margin-top:300px;"> </code>
 
     <l-map
-      ref="map"
+      ref="myMap"
       :zoom="zoom"
       v-if="showMap"
       :center="center"
@@ -98,6 +98,7 @@ export default {
   },
   mounted() {
     this.showMap = true
+     
   }
 }
 </script>
