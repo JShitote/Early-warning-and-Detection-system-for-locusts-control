@@ -6,7 +6,7 @@
     </template>
     <highcharts
       v-else
-      v-for="(options, index) in optionList"
+      v-for="(options, index) in optionsList"
       :options="options"
       ref="highcharts"
       class="chart"
