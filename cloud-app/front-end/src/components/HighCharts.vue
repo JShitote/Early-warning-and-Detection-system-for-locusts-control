@@ -6,7 +6,7 @@
     </template>
     <highcharts
       v-else
-      v-for="(options, index) in optionsList"
+      v-for="(options, index) in optionList"
       :options="options"
       ref="highcharts"
       class="chart"
@@ -30,7 +30,7 @@ export default {
   },
   watch: {
     async device_id(newVal) {
-      console.log('new value',newVal)
+      this.loading = true
       this.fetchSensorData(newVal)
     }
   },
@@ -44,19 +44,15 @@ export default {
   async mounted() {
     await this.fetchSensorData(this.device_id)
   },
-  computed: {
-    uniqueSensorData() {
-      return [...new Set(this.sensorData)]
-    }
-  },
+
   methods: {
     async fetchSensorData(device_id) {
       let promises = []
 
-      this.uniqueSensorData.forEach(sensor_id => {
+      this.sensorData.forEach(sensor_id => {
         promises.push(
           axios.get(
-            `https://api.waziup.io/api/v2/devices/${device_id}/sensors/${sensor_id}/values`
+            `https://api.waziup.io/api/v2/sensors_data?device_id=${device_id}&sensor_id=${sensor_id}&sort=dsc&calibrated=true&limit=100`
           )
         )
       })
@@ -104,29 +100,24 @@ export default {
                 name = 'Wind Direction '
                 break
               default:
-                ;(unit = ''), (name = data[i].sensor_id)
+                ;(unit = 'h'), (name = data[i].sensor_id)
             }
 
             dataset.name = name
             dataset.unit = unit
             dataset.type = 'line'
             dataset.color = Highcharts.getOptions().colors[i]
-            console.log('**************', dataset)
             return this.genOptions(this, dataset)
           })
+
+          if (this.optionsList.length === 0) {
+            this.containsMissingData = true
+          } else {
+            this.containsMissingData = false
+          }
+          this.loading = false
         })
       )
-
-      console.log(this.optionsList.length)
-      if (this.optionsList.length === 0) {
-        console.log('this is true')
-        this.containsMissingData = true
-      }else{
-      console.log(this.optionsList)
-        console.log('this is false')
-        this.containsMissingData = false
-      }
-      this.loading = false
     },
     sync(vm, event, type) {
       vm.$refs.highcharts.forEach(({ chart }) => {

@@ -3,7 +3,7 @@
     <b-card>
       <b-row>
         <b-col>
-          <b-card-text>Langata hospital</b-card-text>
+          <b-card-text>{{ device_id }}</b-card-text>
         </b-col>
         <b-col align="right">
           <b-icon icon="x-circle" @click="closeCard"> </b-icon>
@@ -14,7 +14,10 @@
           <Metrics :graphData="[]" :deviceData="deviceData"></Metrics>
         </b-tab>
         <b-tab title="trend">
-          <HighCharts :sensorData="sensorData" :device_id="device_id"></HighCharts>
+          <HighCharts
+            :sensorData="sensorData"
+            :device_id="device_id"
+          ></HighCharts>
         </b-tab>
       </b-tabs>
     </b-card>
@@ -22,13 +25,12 @@
 </template>
 
 <script>
-import axios from 'axios' 
+import axios from 'axios'
 import { bus } from '../main'
 import Metrics from '@/components/Metrics.vue'
 import HighCharts from '@/components/HighCharts.vue'
 
 export default {
- 
   components: {
     Metrics,
     HighCharts
@@ -40,22 +42,6 @@ export default {
   },
   data() {
     return {
-      windDrirection: {
-        name: 'DIR',
-        value: null
-      },
-      humidity: {
-        name: 'HUM',
-        value: null
-      },
-      temperature: {
-        name: 'TC',
-        value: null
-      },
-      windSpeed: {
-        name: 'SPD',
-        value: null
-      },
       deviceData: null,
       dev_id: null,
       sensorData: []
@@ -69,14 +55,14 @@ export default {
       let { data } = await axios.get(
         `https://api.waziup.io/api/v2/devices/${device_id}`
       )
-
+      this.sensorData = [] //ensures that array is empty before any api call
       return Object.values(data.sensors).map(item => {
-
         let {
           name,
           value: { timestamp, value },
           id
         } = item
+
         this.sensorData.push(id)
         return {
           name,

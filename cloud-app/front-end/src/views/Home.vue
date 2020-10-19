@@ -36,13 +36,11 @@ export default {
     }
   },
   async created() {
-    let { data, status } = await axios.get(
+    let { data } = await axios.get(
       'https://api.waziup.io/api/v2/devices?q=owner==marvin.johnson@orange.com'
     )
 
     this.deviceData = data
-        console.log(this) 
-
 
     bus.$on('showCard', snap => {
       this.device_id = snap.id
