@@ -8,7 +8,11 @@
         <b-row :key="i">
           <b-col class="card-data" v-for="(item, i) in group" :key="i">
             <div>
-              <b-icon icon="search"> </b-icon>
+              <b-img
+                width="18"
+                length="18"
+                :src="require(`@/assets/icons/${item.name}.svg`)"
+              ></b-img>
             </div>
             <div class="card-text">
               {{ item.name | replaceWord }}
@@ -56,6 +60,25 @@ export default {
         case 'DIR':
           return 'Wind Direction'
       }
+    }
+  },
+  icon: function(value) {
+    if (!value) return ''
+    switch (value) {
+      case 'HUM':
+        return 'wind_speed_icon'
+      case 'sHm':
+        return 'Soil Humidity'
+      case 'PH':
+        return 'Soil pH'
+      case 'RD':
+        return 'Rain Drop'
+      case 'SPD':
+        return 'windsock'
+      case 'TC':
+        return 'Temperature'
+      case 'DIR':
+        return 'Wind Direction'
     }
   }
 }

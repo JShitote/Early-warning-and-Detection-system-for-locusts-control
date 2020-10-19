@@ -32,6 +32,9 @@ export default {
     async device_id(newVal) {
       this.loading = true
       this.fetchSensorData(newVal)
+    },
+    async sensorData(newVal) {
+      this.sensorData = newVal
     }
   },
   data() {
@@ -48,8 +51,11 @@ export default {
   methods: {
     async fetchSensorData(device_id) {
       let promises = []
+      let { data: sensorData } = await axios.get(
+        `https://api.waziup.io/api/v2/devices/${device_id}/sensors`
+      )
 
-      this.sensorData.forEach(sensor_id => {
+      sensorData.forEach(({ id: sensor_id }) => {
         promises.push(
           axios.get(
             `https://api.waziup.io/api/v2/sensors_data?device_id=${device_id}&sensor_id=${sensor_id}&sort=dsc&calibrated=true&limit=100`
