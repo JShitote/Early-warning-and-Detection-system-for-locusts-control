@@ -58,7 +58,7 @@ export default {
       sensorData.forEach(({ id: sensor_id }) => {
         promises.push(
           axios.get(
-            `https://api.waziup.io/api/v2/sensors_data?device_id=${device_id}&sensor_id=${sensor_id}&sort=dsc&calibrated=true&limit=100`
+            `https://api.waziup.io/api/v2/sensors_data?device_id=${device_id}&sensor_id=${sensor_id}&sort=dsc&calibrated=true&limit=200`
           )
         )
       })
@@ -164,6 +164,7 @@ export default {
         legend: {
           enabled: false
         },
+        zoomType:'x',
         xAxis: {
           crosshair: true,
           type: 'datetime'
