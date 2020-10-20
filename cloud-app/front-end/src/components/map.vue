@@ -5,7 +5,6 @@
     <l-map
       ref="myMap"
       :zoom="zoom"
-      v-if="showMap"
       :center="center"
       :options="mapOptions"
       @update:center="centerUpdate"
@@ -27,7 +26,7 @@
 
 <script>
 import { bus } from '../main'
-import { latLng, Icon } from 'leaflet'
+import { latLng, Icon, latLngBounds } from 'leaflet'
 import { LMap, LTileLayer, LControlZoom, LMarker } from 'vue2-leaflet'
 
 delete Icon.Default.prototype._getIconUrl
@@ -51,8 +50,8 @@ export default {
   },
   data() {
     return {
-      zoom: 4,
-      center: latLng(47.41322, -1.219482),
+      zoom: 5,
+      center: latLng(-1.2472, 36.6791),
       url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       attribution:
         '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
@@ -65,7 +64,8 @@ export default {
         zoomSnap: 0.5,
         zoomControl: false
       },
-      showMap: false
+      showMap: false,
+      mapMarkers: []
     }
   },
   methods: {
@@ -84,8 +84,10 @@ export default {
   },
   computed: {
     deviceLocation() {
-      return Object.values(this.devices).map((element, i) => {
+      return Object.values(this.devices).map(element => {
         let { id, gateway_id, location, name } = element
+
+        this.mapMarkers.push([location.latitude, location.longitude])
 
         return {
           id,
@@ -98,7 +100,12 @@ export default {
   },
   mounted() {
     this.showMap = true
-     
+    let map = this.$refs.myMap
+    let bounds = latLngBounds(this.mapMarkers)
+
+    if (bounds.isValid()) {
+      map.fitBounds(bounds)
+    }
   }
 }
 </script>

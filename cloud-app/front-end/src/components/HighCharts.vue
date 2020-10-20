@@ -164,7 +164,7 @@ export default {
         legend: {
           enabled: false
         },
-        zoomType:'x',
+        zoomType: 'x',
         xAxis: {
           crosshair: true,
           type: 'datetime'

@@ -9,7 +9,13 @@
           <b-icon icon="x-circle" @click="closeCard"> </b-icon>
         </b-col>
       </b-row>
-      <b-tabs content-class="mt-3" active-nav-item-class="p-2 bg-white text-primary border-bottom border-warning rounded-0 "  pills medium lazy>
+      <b-tabs
+        content-class="mt-3"
+        active-nav-item-class="p-2 bg-white text-primary border-bottom border-warning rounded-0 "
+        pills
+        medium
+        lazy
+      >
         <b-tab title="Metrics" active>
           <Metrics :graphData="[]" :deviceData="deviceData"></Metrics>
         </b-tab>
@@ -97,10 +103,8 @@ export default {
   text-align: left;
 }
 
-.border-bottom{
-
-  border-bottom: 2px solid crimson
-
+.border-bottom {
+  border-bottom: 2px solid crimson;
 }
 /* .nav-link{
   padding: 0.2rem 0.5rem
