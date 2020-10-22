@@ -167,7 +167,13 @@ export default {
         zoomType: 'x',
         xAxis: {
           crosshair: true,
-          type: 'datetime'
+          type: 'datetime',
+          labels: {
+              formatter: function() {
+                console.log(this.value)
+                return Highcharts.dateFormat('%b/%e/%Y/%H', this.value);
+              }
+         }
         },
         yAxis: {
           title: {
